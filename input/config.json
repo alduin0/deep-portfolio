@@ -1,10 +1,10 @@
 {
-  "tickers": ["DB1.DE", "ICE", "CME", "WSX.BE", "^TNX",
-              "^FVX", "^TYX", "WM", "^SPX", "^STOXX50E"],
+  "tickers": ["DB1.DE","^STOXX50E"],
   "pars-data": {
-    "size-history": 10,
+    "size-history": 5,
     "target-feature": "Open",
-    "data-split": [85,15,0]
+    "data-split": [85,10,5],
+    "size-series": 260
   },
   "pars-model": {
     "num-layers": 10,

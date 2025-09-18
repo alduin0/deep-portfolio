@@ -3,6 +3,8 @@ import pathlib as pl
 import datetime
 import json
 
+from src.func_create_dataset import create_dataset
+
 timestamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
 logfilename = f"mainlog-{timestamp}.log"
 logging.basicConfig(level=logging.DEBUG,
@@ -16,7 +18,7 @@ mylog = logging.getLogger(__name__)
 def main():
     # ========================= READING CONFIG FILE ====================================================================
     mylog.info("Reading in external config file")
-    path_config = pl.Path(__file__).parent.joinpath('inpu', 'config.json')
+    path_config = pl.Path(__file__).parent.joinpath('input', 'config.json')
     if pl.Path(path_config).exists():
         with open(path_config) as myfile:
             config = json.load(myfile)
@@ -24,6 +26,13 @@ def main():
     else:
         mylog.error(f"No external config file found at: {path_config}")
 
+    # ========================= CREATING PYTORCH DATALOADERS ===========================================================
+    # ========================= TRAINING - VALIDATION - TEST ===========================================================
+    mydata = create_dataset(ticker=config['tickers'],
+                            split=config['pars-data']['data-split'],
+                            seq_len=config['pars-data']['size-history'],
+                            days=config['pars-data']['size-series'],
+                            )
 
     return 0
 
