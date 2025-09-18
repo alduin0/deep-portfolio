@@ -1,0 +1,20 @@
+{
+  "tickers": ["DB1.DE", "ICE", "CME", "WSX.BE", "^TNX",
+              "^FVX", "^TYX", "WM", "^SPX", "^STOXX50E"],
+  "pars-data": {
+    "size-history": 10,
+    "target-feature": "Open",
+    "data-split": [85,15,0]
+  },
+  "pars-model": {
+    "num-layers": 10,
+    "size-hidden": 128,
+    "dropout":0.2
+  },
+  "pars-learning": {
+    "size-batch":64,
+    "learning-rate": 1e-6,
+    "num-epochs": 5,
+    "num-workers": 3
+  }
+}
