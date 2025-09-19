@@ -51,6 +51,10 @@ def main():
                                                num_workers=config['pars-learning']['num-workers'],
                                                )
 
+    # ========================== SETTING UP MODEL ARCHITECTURE =========================================================
+
+    # ===================== TRAIN, VALIDATE AND TEST MODEL =============================================================
+
     return 0
 
 
