@@ -1,5 +1,3 @@
-from encodings.punycode import selective_len
-
 from sklearn.preprocessing import MinMaxScaler
 import numpy as np
 import yfinance as yf
@@ -52,16 +50,21 @@ def create_dataset(ticker:tuple[str]|list[str]=('DB1.DE', '^STOXX50E'),
     data_val   = hist_val[index_splits[0]:index_splits[1], :]                  #
     data_test  = hist_val[index_splits[1]::, :]                                #
 
-    size_train = index_splits[0] - seq_len                                     #
-    size_val = index_splits[1] - seq_len                                       #
-    size_test = rows_after - size_val - size_train - seq_len                   #
-    size_cols = len(ticker) * seq_len                                          #
+    num_ticker = len(ticker)                                                   #
+    size_train = data_train.shape[0]                                           #
+    size_val =   data_val.shape[0]                                             #
+    size_test = rows_after - size_train - size_val                             #
+    size_cols = num_ticker * seq_len                                           #
 
-    x_train, y_train = np.zeros((size_train, size_cols),
-                                dtype=np.float64)
-    x_val, y_val = np.zeros((size_val, size_cols),
-                            dtype=np.float64)
-    x_test, y_test = np.zeros((size_test, size_cols),
-                              dtype=np.float64)
+    print(size_train, size_val, size_test)
+    x_train = np.zeros((size_train, size_cols), dtype=np.float64)
+    y_train = np.zeros((size_train, num_ticker), dtype=np.float64)
+    x_val = np.zeros((size_val, size_cols), dtype=np.float64)
+    y_val = np.zeros((size_val, num_ticker), dtype=np.float64)
+    x_test = np.zeros((size_test, size_cols), dtype=np.float64)
+    y_test = np.zeros((size_test, num_ticker), dtype=np.float64)
+
+
+
 
     return {}
