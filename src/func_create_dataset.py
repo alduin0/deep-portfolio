@@ -64,6 +64,19 @@ def create_dataset(ticker:tuple[str]|list[str]=('DB1.DE', '^STOXX50E'),
     x_test = np.zeros((size_test - seq_len, size_cols), dtype=np.float64)
     y_test = np.zeros((size_test - seq_len, num_ticker), dtype=np.float64)
 
+    for index in range(x_train.shape[0]):
+        x_train[index,:] = data_train[index:index+seq_len, :].flatten()
+        y_train[index,:] = data_train[index+seq_len, :]
+
+    for index in range(x_val.shape[0]):
+        x_val[index,:] = data_val[index:index+seq_len, :].flatten()
+        y_val[index,:] = data_val[index+seq_len, :]
+
+    for index in range(x_test.shape[0]):
+        x_test[index,:] = data_test[index:index+seq_len, :].flatten()
+        y_test[index,:] = data_test[index+seq_len, :]
+
+
 
 
 
