@@ -14,7 +14,27 @@ def create_dataset(ticker:tuple[str]|list[str]=('DB1.DE', '^STOXX50E'),
                    days:int=90,
                    )->dict:
     """
-    hello dox
+    Creates torch datasets for a given train-validate-test split. Raw data is fetched from
+    yahoo finance according to argument 'days' passed to function. The number of preceeding
+    days used as features can be set by seq_len. seq_len = 5 means that five days will
+    be used as features and the following day as target.
+
+    Parameters:
+    -----------
+    ticker : tuple[str] | list[str]
+           tuple or list of strings encoding valid yahoo finance ticker symbols
+    split : tuple[int] | list[int]
+          tuple or list of ints depciting the demanded (train, val, test) split
+    seq_len : int
+            int setting the length of historic dates used for predicting the upcoming
+            single date
+    days : int
+         size of trading days pulled from yahoo finance as raw data
+
+    Returns:
+    --------
+    dict
+        dictionary of torch datasets for training, validation, and testing data.
     """
     if sum(split) != 100:
         mylog.error(f"Invalid split values (train, val, test) = {split}")
