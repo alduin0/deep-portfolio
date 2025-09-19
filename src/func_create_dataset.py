@@ -56,13 +56,15 @@ def create_dataset(ticker:tuple[str]|list[str]=('DB1.DE', '^STOXX50E'),
     size_test = rows_after - size_train - size_val                             #
     size_cols = num_ticker * seq_len                                           #
 
-    print(size_train, size_val, size_test)
-    x_train = np.zeros((size_train, size_cols), dtype=np.float64)
-    y_train = np.zeros((size_train, num_ticker), dtype=np.float64)
-    x_val = np.zeros((size_val, size_cols), dtype=np.float64)
-    y_val = np.zeros((size_val, num_ticker), dtype=np.float64)
-    x_test = np.zeros((size_test, size_cols), dtype=np.float64)
-    y_test = np.zeros((size_test, num_ticker), dtype=np.float64)
+    # allocating memory taking sequence lengths into account
+    x_train = np.zeros((size_train - seq_len, size_cols), dtype=np.float64)
+    y_train = np.zeros((size_train - seq_len, num_ticker), dtype=np.float64)
+    x_val = np.zeros((size_val - seq_len, size_cols), dtype=np.float64)
+    y_val = np.zeros((size_val - seq_len, num_ticker), dtype=np.float64)
+    x_test = np.zeros((size_test - seq_len, size_cols), dtype=np.float64)
+    y_test = np.zeros((size_test - seq_len, num_ticker), dtype=np.float64)
+
+
 
 
 
