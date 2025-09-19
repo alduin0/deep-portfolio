@@ -31,7 +31,15 @@ def create_dataset(ticker:tuple[str]|list[str]=('DB1.DE', '^STOXX50E'),
     rows_after = len(histories)
     mylog.info(f" {(rows_after - rows_before) / rows_before * 100:.2f} [%] were removed by dropna().")
     mylog.info(f"Using {rows_after} rows for upcoming data preparation.")
+    # logging the timespan covered in terms of dates in real world
+    dates = histories.index
+    mylog.info(f"Used data covers dates from {dates.min()} to {dates.max()}")
+    del dates, rows_after, rows_before, mytickers
+    # ============================= SCALING DATA TO [0,1] ==============================================================
 
-    # ============================== SLICING ROWS INTO HISTORY SEQUENCES ===============================================
 
-    return 0
+    # ============================== SLICING FRAME BLOCKS INTO HISTORY SEQUENCES =======================================
+    index_splits = np.array((split[0], split[0]+split[1]))/100 * rows_after
+
+
+    return {}
