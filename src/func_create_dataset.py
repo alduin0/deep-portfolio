@@ -22,38 +22,38 @@ def create_dataset(ticker:tuple[str]|list[str]=('DB1.DE', '^STOXX50E'),
     mylog.info(f"Called function: {inspect.stack()[0].function}")
 
     # ================================ GETTING MULTITICKER DATA AT ONCE ================================================
-    mytickers = yf.Tickers(ticker)                                             #
-    histories = mytickers.history(period=f"{days}d")                           #
+    mytickers = yf.Tickers(ticker)                                             # assign yahoo finance ticker
+    histories = mytickers.history(period=f"{days}d")                           # pull historic data
     # instead of dropping nan rows, implement data filling later
-    histories = histories.drop(columns=['High', 'Low', 'Close',                #
-                                        'Volume', 'Dividends',                 #
-                                        'Stock Splits'])                       #
-    rows_before = len(histories)                                               #
-    histories = histories.dropna()                                             #
-    rows_after = len(histories)                                                #
+    histories = histories.drop(columns=['High', 'Low', 'Close',                # drop not needed
+                                        'Volume', 'Dividends',                 # columns of data
+                                        'Stock Splits'])                       # for saving ram
+    rows_before = len(histories)                                               # percentage info
+    histories = histories.dropna()                                             # of unusable rows
+    rows_after = len(histories)                                                # for user
     mylog.info(f" {(rows_after - rows_before) / rows_before * 100:.2f} [%] were removed by dropna().")
     mylog.info(f"Using {rows_after} rows for upcoming data preparation.")
     # logging the timespan covered in terms of dates in real world
-    dates = histories.index                                                    #
-    mylog.info(f"Used data covers dates from {dates.min()} to {dates.max()}")  #
-    histories = histories['Open']                                              #
+    dates = histories.index                                                    # info on
+    mylog.info(f"Used data covers dates from {dates.min()} to {dates.max()}")  # timespan
+    histories = histories['Open']                                              # covered
     # ============================= SCALING DATA TO [0,1] ==============================================================
-    for key in histories.keys():                                               #
-        histories[key] = MinMaxScaler(feature_range=(0,1)).fit_transform(      #
-                                      histories[key].values.reshape(-1,1))     #
+    for key in histories.keys():                                               # transforming
+        histories[key] = MinMaxScaler(feature_range=(0,1)).fit_transform(      # data to normalised
+                                      histories[key].values.reshape(-1,1))     # format for speed
     hist_val = histories.values                                                #
     # ============================== SLICING FRAME BLOCKS INTO HISTORY SEQUENCES =======================================
-    index_splits = np.array((split[0], split[0]+split[1]))/100 * rows_after    #
-    index_splits = [int(val) for val in index_splits]                          #
+    index_splits = np.array((split[0], split[0]+split[1]))/100 * rows_after    # indices where
+    index_splits = [int(val) for val in index_splits]                          # to split arrays
 
-    data_train = hist_val[:index_splits[0],:]                                  #
-    data_val   = hist_val[index_splits[0]:index_splits[1], :]                  #
-    data_test  = hist_val[index_splits[1]::, :]                                #
+    data_train = hist_val[:index_splits[0],:]                                  # separating raw data
+    data_val   = hist_val[index_splits[0]:index_splits[1], :]                  # into given train,
+    data_test  = hist_val[index_splits[1]::, :]                                # val, test split
 
-    num_ticker = len(ticker)                                                   #
-    size_train = data_train.shape[0]                                           #
-    size_val =   data_val.shape[0]                                             #
-    size_test = rows_after - size_train - size_val                             #
+    num_ticker = len(ticker)                                                   # defining sizes
+    size_train = data_train.shape[0]                                           # and counts for
+    size_val =   data_val.shape[0]                                             # allocation of
+    size_test = rows_after - size_train - size_val                             # memory later
     size_cols = num_ticker * seq_len                                           #
 
     # allocating memory taking sequence lengths into account
@@ -78,6 +78,7 @@ def create_dataset(ticker:tuple[str]|list[str]=('DB1.DE', '^STOXX50E'),
         x_test[index,:] = data_test[index:index+seq_len, :].flatten()
         y_test[index,:] = data_test[index+seq_len, :]
 
+    # converting numpy arrays to torch datasets
     dataset_train = torch.utils.data.TensorDataset(torch.from_numpy(x_train),
                                                    torch.from_numpy(y_train))
     dataset_val = torch.utils.data.TensorDataset(torch.from_numpy(x_val),
