@@ -2,6 +2,7 @@ import logging
 import pathlib as pl
 import datetime
 import json
+import torch
 
 from src.func_create_dataset import create_dataset
 
@@ -33,6 +34,22 @@ def main():
                             seq_len=config['pars-data']['size-history'],
                             days=config['pars-data']['size-series'],
                             )
+
+    loader_train = torch.utils.data.DataLoader(mydata['dataset_train'],
+                                               batch_size=config['pars-learning']['size-batch'],
+                                               shuffle=False,
+                                               num_workers=config['pars-learning']['num-workers'],
+                                               )
+    loader_val   = torch.utils.data.DataLoader(mydata['dataset_val'],
+                                               batch_size=config['pars-learning']['size-batch'],
+                                               shuffle=False,
+                                               num_workers=config['pars-learning']['num-workers'],
+                                               )
+    loader_test   = torch.utils.data.DataLoader(mydata['dataset_test'],
+                                               batch_size=config['pars-learning']['size-batch'],
+                                               shuffle=False,
+                                               num_workers=config['pars-learning']['num-workers'],
+                                               )
 
     return 0
 
