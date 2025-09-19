@@ -64,6 +64,8 @@ def create_dataset(ticker:tuple[str]|list[str]=('DB1.DE', '^STOXX50E'),
     x_test = np.zeros((size_test - seq_len, size_cols), dtype=np.float64)
     y_test = np.zeros((size_test - seq_len, num_ticker), dtype=np.float64)
 
+    # assigning data from data arrays to their flattened analoga
+    # in respective arrays for train and target
     for index in range(x_train.shape[0]):
         x_train[index,:] = data_train[index:index+seq_len, :].flatten()
         y_train[index,:] = data_train[index+seq_len, :]
