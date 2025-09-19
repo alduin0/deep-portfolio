@@ -34,10 +34,11 @@ def create_dataset(ticker:tuple[str]|list[str]=('DB1.DE', '^STOXX50E'),
     # logging the timespan covered in terms of dates in real world
     dates = histories.index
     mylog.info(f"Used data covers dates from {dates.min()} to {dates.max()}")
-    del dates, rows_after, rows_before, mytickers
+    histories = histories['Open']
+    print(histories)
     # ============================= SCALING DATA TO [0,1] ==============================================================
-
-
+    for key in histories.keys():
+        histories[key] = MinMaxScaler(feature_range=(0,1)).fit_transform(histories[key].values.reshape(-1,1))
     # ============================== SLICING FRAME BLOCKS INTO HISTORY SEQUENCES =======================================
     index_splits = np.array((split[0], split[0]+split[1]))/100 * rows_after
 
