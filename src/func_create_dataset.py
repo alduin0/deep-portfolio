@@ -78,10 +78,14 @@ def create_dataset(ticker:tuple[str]|list[str]=('DB1.DE', '^STOXX50E'),
         x_test[index,:] = data_test[index:index+seq_len, :].flatten()
         y_test[index,:] = data_test[index+seq_len, :]
 
+    dataset_train = torch.utils.data.TensorDataset(torch.from_numpy(x_train),
+                                                   torch.from_numpy(y_train))
+    dataset_val = torch.utils.data.TensorDataset(torch.from_numpy(x_val),
+                                                 torch.from_numpy(y_val))
+    dataset_test = torch.utils.data.TensorDataset(torch.from_numpy(x_test),
+                                                  torch.from_numpy(y_test))
 
-
-
-
-
-
-    return {}
+    mydict = {'dataset_train':dataset_train,
+              'dataset_val':dataset_val,
+              'dataset_test':dataset_test}
+    return mydict
