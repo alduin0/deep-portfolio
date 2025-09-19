@@ -44,9 +44,12 @@ def create_dataset(ticker:tuple[str]|list[str]=('DB1.DE', '^STOXX50E'),
     index_splits = np.array((split[0], split[0]+split[1]))/100 * rows_after
     index_splits = [int(val) for val in index_splits]
 
-
     data_train = hist_val[:index_splits[0],:]
     data_val   = hist_val[index_splits[0]:index_splits[1], :]
     data_test  = hist_val[index_splits[1]::, :]
+    index_splits.append(data_test.shape[0])
+
+
+
 
     return {}
