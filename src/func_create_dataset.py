@@ -47,9 +47,10 @@ def create_dataset(ticker:tuple[str]|list[str]=('DB1.DE', '^STOXX50E'),
     data_train = hist_val[:index_splits[0],:]
     data_val   = hist_val[index_splits[0]:index_splits[1], :]
     data_test  = hist_val[index_splits[1]::, :]
-    index_splits.append(data_test.shape[0])
 
-
+    size_train = index_splits[0]
+    size_val = index_splits[1]
+    size_test = rows_after - size_val - size_train
 
 
     return {}
